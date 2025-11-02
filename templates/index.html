@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Technician Data Capture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        video, img, audio {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .preview-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .submit-section button {
+            font-size: 1.2em;
+            padding: 15px 40px;
+        }
+
+        .captured-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .captured-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        #camera-preview {
+            display: none;
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .recording-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #dc3545;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Service Technician Data Capture</h1>
+            <p>Document your service calls with photos, videos, audio, and detailed notes</p>
+        </div>
+
+        <div class="content">
+            <!-- Structured Text Form -->
+            <div class="section">
+                <h2><span class="emoji">📝</span> Service Information</h2>
+
+                <div class="form-group">
+                    <label for="serviceType">Service Type</label>
+                    <select id="serviceType">
+                        <option value="">Select service type</option>
+                        <option value="installation">Installation</option>
+                        <option value="repair">Repair</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="inspection">Inspection</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipmentId">Equipment ID/Model</label>
+                    <input type="text" id="equipmentId" placeholder="Equipment identifier">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Service Notes</label>
+                    <textarea id="notes" placeholder="Detailed notes about the service call..."></textarea>
+                </div>
+            </div>
+
+            <!-- Photo Capture -->
+            <div class="section">
+                <h2><span class="emoji">📷</span> Photo Capture</h2>
+                <button id="startCamera">Start Camera</button>
+                <button id="capturePhoto" style="display:none;">Take Photo</button>
+                <button id="stopCamera" class="btn-secondary" style="display:none;">Stop Camera</button>
+
+                <div class="preview-container">
+                    <video id="camera-preview" autoplay playsinline></video>
+                    <canvas id="photo-canvas" style="display:none;"></canvas>
+                </div>
+
+                <div class="captured-items" id="photo-list"></div>
+                <div id="photo-status" class="status-message"></div>
+            </div>
+
+            <!-- Video Recording -->
+            <div class="section">
+                <h2><span class="emoji">🎥</span> Video Recording</h2>
+                <button id="startVideo">Start Recording</button>
+                <button id="stopVideo" class="btn-danger" style="display:none;">
+                    <span class="recording-indicator"></span>Stop Recording
+                </button>
+
+                <div class="preview-container" id="video-preview-container"></div>
+                <div class="captured-items" id="video-list"></div>
+                <div id="video-status" class="status-message"></div>
+            </div>
+
+            <!-- Audio Recording -->
+            <div class="section">
+                <h2><span class="emoji">🎤</span> Audio Recording</h2>
+                <button id="startAudio">Start Recording</button>
+                <button id="stopAudio" class="btn-danger" style="display:none;">
+                    <span class="recording-indicator"></span>Stop Recording
+                </button>
+
+                <div class="preview-container" id="audio-preview-container"></div>
+                <div class="captured-items" id="audio-list"></div>
+                <div id="audio-status" class="status-message"></div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <div id="submit-status" class="status-message"></div>
+                <button id="submitAll" class="btn-success">Submit Service Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
